@@ -1,4 +1,4 @@
-function N=column2matrix(M)
+function N=column2Umatrix(M)
     n=(-1+sqrt(1+8*length(M)))/2;
     N=zeros(n,n);
     w=1;
