@@ -5,6 +5,8 @@ M(1,:)=r; M(:,1)=c;
 N(n,:)=r; N(:,n)=r;
 M
 N
+M=Umatrix2column(M);
+N=Umatrix2column(N);
 %replace with own code
-LM=chol(M,'lower')
-LN=chol(N,'lower')
+LM=column2Umatrix(cholesky(M))
+LN=column2Umatrix(cholesky(N))
