@@ -1,0 +1,20 @@
+\subsection{Test der Choleskyzerlegung}
+Die in der vorhergehenden Aufgabe implementierte Choleskyzerlegung soll nun getestet werden.
+Dazu werden spezielle Matrizen verwendet. Der folgende Code erzeugt diese:
+\lstinputlisting{genBM.m}
+Die erzeugte Matrix befindet sich schon im Standardspaltenformat. Mit der Funktion 
+{\tt column2symmatrix(A)} (siehe \ref{Anhang}) kann diese in eine herkömmliche Matrix 
+umgewandelt werden ein Aufruf von {\tt column2symmatrix(genBM(3))} erzeugt folgender Ergebniss:
+\begin{verbatim}
+ans =
+
+     4    -1     0    -1     0     0     0     0     0
+    -1     4    -1     0    -1     0     0     0     0
+     0    -1     4     0     0    -1     0     0     0
+    -1     0     0     4    -1     0    -1     0     0
+     0    -1     0    -1     4    -1     0    -1     0
+     0     0    -1     0    -1     4     0     0    -1
+     0     0     0    -1     0     0     4    -1     0
+     0     0     0     0    -1     0    -1     4    -1
+     0     0     0     0     0    -1     0    -1     4
+\end{verbatim}
