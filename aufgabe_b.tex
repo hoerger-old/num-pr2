@@ -1,0 +1,86 @@
+\subsection{Zwei Algorithmen}
+Ziel dieser Aufgabe ist es, die äquivalenz von zwei Algorithmen zu zeigen.
+Der Erste entspricht dem Algorithmus im Skriptum. 
+\begin{algorithm}
+\caption{Veriante aus dem Skriptum}
+\label{av1}
+\begin{algorithmic}[1]
+\FOR{k=1,\dots,n}
+    \STATE $L_{kk}\gets \sqrt{(A_{kk}-\sum_{j=1}^{k-1}L_{kj}^2)}$ \label{av1:diag}
+    \FOR{i=k+1,\dots,n}
+        \STATE $L_{ik}\gets (A_{ik}-\sum_{j=1}^{k-1}L_{ij}L_{kj})/L_{kk}$ \label{av1:elem}
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+Der zweite Algorithmus ist eine leichte Variation davon. Im Gegensatz zum
+ursprünglichen Algorithmus arbeitet er direkt auf der Eingangsmatrix und
+geht auch stärker Spaltenweise vor. Er wird in \ref{Aufgabe_c} implementiert.
+\begin{algorithm}
+\caption{Modifizierte Version}
+\label{av2}
+\begin{algorithmic}[1]
+\FOR{k=1,\dots,n}
+    \STATE $A_{kk}\gets \sqrt{A_{kk}}$ \label{av2:sqrt}
+    \FOR{i=k+1,\dots,n} \label{av2:divs}
+        \STATE $A_{ik}\gets A_{ik}/A_{kk}$ \label{av2:div}
+    \ENDFOR \label{av2:dive}
+
+    \FOR{i=k+1,\dots,n} \label{av2:sums}
+        \FOR{j=i,\dots,n}
+            \STATE $A_{ji}\gets A_{ji}-A_{jk}A_{ik}$ \label{av2:sum}
+        \ENDFOR
+    \ENDFOR \label{av2:sume}
+    \label{av2:suma}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\newcommand{\linespanK}{Zeile~\ref{av2:sqrt} bis \ref{av2:dive} }
+Es soll nun gezeigt werden, dass diese zwei Algorithmen äquivalent sind.
+
+Wir sehen, dass in Algorithmus~\ref{av1} die Elemente der $L$ Matrix jeweils nur
+einmal verändert werden. Bei den Diagonalelementen passiert das in Zeile~\ref{av1:diag},
+für alle anderen Elemente passiert das in Zeile~\ref{av1:elem}. 
+
+In Algorithmus~\ref{av2} ist die Situation komplizierter. Die Laufvariable $k$ wird auch 
+hier verwendet um die Spalten durch zu zählen, allerdings gibt es innerhalb der
+Schleife mehrere Aspekte zu beachten. \linespanK arbeiten
+jeweils nur mit Elementen aus der $k$. Spalte. Interessant sind Zeile~\ref{av2:sums} bis
+\ref{av2:sume}. Da $j\ge i>k$ und $i,j\le n$ wird in Zeile~\ref{av2:sum} jedes Element, 
+das in den auf die $k$. Spalte folgenden Spalten in der unteren Dreiecksmatrix steht,
+bearbeitet. Dabei wird von jedem dieser Element ein Produkt aus zwei Elementen der $k$.
+Spalte subtrahiert. Daraus folgt, dass ab Zeile~\ref{av2:dive} alle Elemente in den
+Spalten $\le k$ nicht mehr verändert werden.
+
+Sei $L_{xy}, x\ge y$ ein Element aus dem Resultat von Algorithmus~\ref{av1}, wenn das
+korrespondierende Element $A_{xy}$ aus Algorithmus~\ref{av2} den selben Wert hat, dann
+sind die Algorithmen äquivalent. In Zeile~\ref{av2:sum} von Algorithmus~\ref{av2} 
+wird immer 
+\begin{equation*}
+    A_{xy}\gets A_{xy}-A_{xk}A_{yk} 
+\end{equation*}
+berechnet. Da sich die Elemente in der $k$. Spalte nicht mehr verändern, können wir 
+dies schreiben als:
+\begin{align*}
+    A''_{xy}\gets& -A'_{x(y-1}A'_{y(y-1)}-A'_{x(y-2)}A'_{y(y-2)}-\dots-A'_{x1}A_{y1}+A'_{xy} \\
+          &=A'_{xy}-\sum_{i=1}^{y-1}A'_{xi}A'_{yi}
+\end{align*}
+Wobei $A'_{mn}$ als der Wert an der Stelle $(m,n)$ nach Abschluss des Algorithmuses ist und 
+$A''_{mn}$ der Wert an der Stelle $(m,n)$ bevor \linespanK 
+auf diesen Wert ausgeführt werden, also der Wert dieses Elements in Zeile~\ref{av2:suma} hat
+wenn $k=j-1$. Wenn wir nun $A'_{xy}$ erhalten wollen müssen wir \linespanK mit einbeziehen.
+Dabei gibt es zwei Fälle. Der erste Fall tritt ein wenn $x=y$. In diesem Fall gilt: 
+\begin{equation*}
+    A'_{xx} \gets \sqrt{A'_{xx}-\sum_{i=1}^{y-1}A'_{xi}A'_{xi}} = 
+                  \sqrt{A'_{xx}-\sum_{i=1}^{y-1}(A'_{xi})^2}
+\end{equation*}
+Im Fall $x>y$ gilt:
+\begin{equation*}
+    A'_{xy}\gets \frac{\left(A'_{xy}-\sum_{i=1}^{y-1}A'_{xi}A'_{yi}\right)}{A'_{xx}}
+\end{equation*}
+Was genau mit Zeile~\ref{av1:diag} bzw. \ref{av1:elem} aus Algorithmus~\ref{av1} 
+übereinstimmt.
+Wir sehen mit Induktion sofort, dass die $A'_{nm}$ aus Algorithmus~\ref{av2} mit den
+$L_{nm}$ aus Algorithmus~\ref{av1} korrespondieren\footnote{wenn $m=1$ gilt: $L_{1n}=
+A_{1n}=A'_{1n}$}.
